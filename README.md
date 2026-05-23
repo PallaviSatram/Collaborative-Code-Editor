@@ -8,6 +8,7 @@ Features
 - Unique room ID generation
 - Responsive UI
 - Live participant updates
+  
 Tech Stack
 Frontend
 - React
