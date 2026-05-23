@@ -10,33 +10,42 @@ Features
 - Live participant updates
   
 Tech Stack
+
 Frontend
 - React
 - HTML
 - CSS
 - JavaScript
+
 Backend
 - Node.js
 - Express.js
 - Socket.IO
+
 Installation
 - Clone the Repository
 - git clone <repository-link>
 - Navigate to Project Folder
 - cd collaborative-code-editor
+
 Install Dependencies
+
 Frontend
 - cd client
 - npm install
+
 Backend
 - cd ../server
 - npm install
+
 Run the Application
 - Start Backend Server
 - npm start
+
 Start Frontend
 - cd client
 - npm start
+
 Future Enhancements
 - Code execution support
 - Syntax highlighting
