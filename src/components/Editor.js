@@ -1,56 +1,103 @@
-import {React, useRef, useState} from 'react';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+} from 'react';
+
 import CodeMirror from '@uiw/react-codemirror';
 
 import { javascript } from '@codemirror/lang-javascript';
-import { html } from '@codemirror/lang-html';
-import { css } from '@codemirror/lang-css';
 import { python } from '@codemirror/lang-python';
 import { java } from '@codemirror/lang-java';
 import { cpp } from '@codemirror/lang-cpp';
-import { markdown } from '@codemirror/lang-markdown';
-import { json } from '@codemirror/lang-json';
-import { rust } from '@codemirror/lang-rust';
+import { html } from '@codemirror/lang-html';
+import { css } from '@codemirror/lang-css';
+import {sql} from '@codemirror/lang-sql';
 import { go } from '@codemirror/lang-go';
-import { sql } from '@codemirror/lang-sql';
+import { rust } from '@codemirror/lang-rust';
 
 import { dracula } from '@uiw/codemirror-theme-dracula';
-import { keymap } from '@codemirror/view';
 
-import {
-  closeBrackets,
-  closeBracketsKeymap
-} from '@codemirror/autocomplete';
+import ACTIONS from '../Actions';
 
+const Editor = ({ socketRef, roomId }) => {
 
-  const Editor = () => {
+  const editorRef = useRef(null);
 
-    const editorRef = useRef(null);
+  const [code, setCode] = useState('');
 
-    const languageExtensions = {
-    javascript: javascript(),
-    html: html(),
-    css: css(),
-    python: python(),
-    java: java(),
-    cpp: cpp(),
-    markdown: markdown(),
-    json: json(),
-    rust: rust(),
-    go: go(),
-    sql: sql()
+  const [language, setLanguage] = useState('javascript');
+  const languageExtensions = {
+  javascript: javascript(),
+  python: python(),
+  java: java(),
+  cpp: cpp(),
+  html: html(),
+  css: css(),
+  sql: sql(),
+  go: go(),
+  rust: rust(),
+};
+
+  const handleChange = (value) => {
+
+    setCode(value);
+
+    if (!socketRef.current) return;
+
+    socketRef.current.emit(
+      ACTIONS.CODE_CHANGE,
+      {
+        roomId,
+        code: value,
+      }
+    );
   };
-  const [language, setLanguage] = useState("javascript");
+
+  useEffect(() => {
+
+    if (!socketRef.current) return;
+
+    const handleCodeChange = ({ code }) => {
+
+      if (code !== null) {
+
+        setCode(code);
+
+      }
+
+    };
+
+    socketRef.current.on(
+      ACTIONS.CODE_CHANGE,
+      handleCodeChange
+    );
+
+    return () => {
+
+      socketRef.current.off(
+        ACTIONS.CODE_CHANGE,
+        handleCodeChange
+      );
+
+    };
+
+  }, [socketRef.current]);
+
   return (
     <CodeMirror
-      value="// Start coding..."
-      height="100%"
+      value={code}
+      height="100vh"
       theme={dracula}
-      extensions={[
-      languageExtensions[language],
-      closeBrackets(),
-      keymap.of(closeBracketsKeymap)
-      ]}
-    
+      extensions={[javascript()]}
+
+      onChange={(value, viewUpdate) => {
+
+        editorRef.current = viewUpdate.view;
+
+        handleChange(value);
+
+      }}
     />
   );
 };
