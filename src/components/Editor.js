@@ -20,7 +20,7 @@ import { dracula } from '@uiw/codemirror-theme-dracula';
 
 import ACTIONS from '../Actions';
 
-const Editor = ({ socketRef, roomId }) => {
+const Editor = ({ socketRef, roomId, onCodeChange }) => {
 
   const editorRef = useRef(null);
 
@@ -41,6 +41,7 @@ const Editor = ({ socketRef, roomId }) => {
 
   const handleChange = (value) => {
 
+    onCodeChange(value);
     setCode(value);
 
     if (!socketRef.current) return;
@@ -73,6 +74,13 @@ const Editor = ({ socketRef, roomId }) => {
       handleCodeChange
     );
 
+    socketRef.current.on(
+      ACTIONS.SYNC_CODE,
+      ({ code }) => {
+        setCode(code);
+      }
+    );
+
     return () => {
 
       socketRef.current.off(
@@ -80,16 +88,67 @@ const Editor = ({ socketRef, roomId }) => {
         handleCodeChange
       );
 
+      socketRef.current.off(ACTIONS.SYNC_CODE);
     };
+    
 
   }, [socketRef.current]);
 
   return (
+    <>
+      <select
+        value={language}
+        onChange={(e) =>
+          setLanguage(e.target.value)
+        }
+        className="language-selector"
+      >
+
+        <option value="javascript">
+          JavaScript
+        </option>
+
+        <option value="python">
+          Python
+        </option>
+
+        <option value="java">
+          Java
+        </option>
+
+        <option value="cpp">
+          C/C++
+        </option>
+
+        <option value="html">
+          HTML
+        </option>
+
+        <option value="css">
+          CSS
+        </option>
+
+        <option value="sql">
+          SQL
+        </option>
+
+        <option value="go">
+          Go
+        </option>
+
+        <option value="rust">
+          Rust
+        </option>
+
+      </select>
+
     <CodeMirror
       value={code}
       height="100vh"
       theme={dracula}
-      extensions={[javascript()]}
+      extensions={[
+        languageExtensions[language]
+      ]}
 
       onChange={(value, viewUpdate) => {
 
@@ -99,6 +158,8 @@ const Editor = ({ socketRef, roomId }) => {
 
       }}
     />
+    </>
+    
   );
 };
 

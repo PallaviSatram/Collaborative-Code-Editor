@@ -159,8 +159,8 @@ footer a{
 }
 
 .copy-btn{
-  background: #22C55E;
-  color: white;
+  background: #fff;
+  color: rgb(0, 0, 0);
 }
 
 .copy-btn:hover{
@@ -183,4 +183,29 @@ footer a{
   font-size: 20px;
   line-height: 1.6;
   padding-top: 20px;
+}
+
+.language-selector{
+  position: absolute;
+  top: 10px;
+  right: 20px;
+  background: #1E293B;
+  color: #ffffff;
+  border: 1px solid #334155;
+  padding: 10px 14px;
+  border-radius: 8px;
+  outline: none;
+  font-size: 14px;
+  cursor: pointer;
+  z-index: 10;
+  transition: 0.2s ease;
+}
+
+.language-selector:hover{
+  background: #334155;
+}
+
+.language-selector option{
+  background: #1E293B;
+  color: white;
 }

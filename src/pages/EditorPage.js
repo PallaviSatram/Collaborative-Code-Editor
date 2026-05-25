@@ -10,6 +10,7 @@ import toast from 'react-hot-toast';
 const EditorPage = ( ) => {
   const reactNavigator = useNavigate();
   const socketRef = useRef(null);
+  const codeRef = useRef(null);
   const location = useLocation();
   const {roomId} = useParams();
   const [clients, setClients] = useState([]);
@@ -43,7 +44,10 @@ const EditorPage = ( ) => {
             toast.success(`${username} joined the room`);
           }
           setClients(clients);
-
+          socketRef.current.emit(ACTIONS.SYNC_CODE, {
+            code: codeRef.current,
+            socketId,
+          });
         }
       );
 
@@ -67,10 +71,25 @@ const EditorPage = ( ) => {
 
   }, []);
 
+async function copyRoomId() {
+    try{
+      await navigator.clipboard.writeText(roomId);
+      toast.success('Room Id has been copied to your clipboard')
+    }catch(error) {
+      toast.error('Could not copy Room Id');
+      console.error(error);
+    }
+  }
+
+  function leaveRoom() {
+    reactNavigator('/');
+  }
+
   
   if(! location.state){
     return <Navigate to="/" />
   }
+
   return (
     <div className='main-wrap'>
       <div className='aside'>
@@ -92,13 +111,16 @@ const EditorPage = ( ) => {
               }
           </div>
         </div>
-      <button className='btn copy-btn'>Copy ROOM ID</button>
-      <button className='btn leave-btn'>Leave</button>
+      <button className='btn copy-btn' onClick={copyRoomId}>COPY ROOM ID</button>
+      <button className='btn leave-btn' onClick={leaveRoom}>Leave</button>
       </div>
       <div className='editor-wrap'>
           <Editor
             socketRef={socketRef}
             roomId={roomId}
+            onCodeChange = { (code) => {
+              codeRef.current = code;
+            }}
           />
       </div>
     </div>
