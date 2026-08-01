@@ -51,9 +51,8 @@ const EditorPage = () => {
             socketRef.current.emit(
               ACTIONS.SYNC_CODE,
               {
-                code: codeRef.current,
-                language: languageRef.current,
                 socketId,
+                roomId
               }
             );
 

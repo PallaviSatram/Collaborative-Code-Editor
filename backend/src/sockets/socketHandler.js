@@ -62,17 +62,21 @@ function socketHandler(io) {
 
         });
 
-        socket.on(ACTIONS.SYNC_CODE, ({ socketId, code, language }) => {
+        socket.on(
+            ACTIONS.SYNC_CODE,
+            ({ socketId, roomId }) => {
 
-            io.to(socketId).emit(
-                ACTIONS.SYNC_CODE,
-                {
-                    code,
-                    language,
-                }
-            );
+                const roomState = roomService.getRoomState(roomId);
 
-        });
+                if (!roomState) return;
+
+                io.to(socketId).emit(
+                    ACTIONS.SYNC_CODE,
+                    roomState
+                );
+
+            }
+        );
 
         socket.on("disconnecting", () => {
 

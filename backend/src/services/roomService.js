@@ -1,32 +1,20 @@
-class RoomService {
+const roomModel = require("../models/roomModel");
 
-  constructor() {
-    this.rooms = new Map();
-  }
+class RoomService {
 
   createRoom(roomId) {
 
-    if (!this.rooms.has(roomId)) {
+    return roomModel.create(roomId);
 
-      this.rooms.set(roomId, {
-        code: "",
-        language: "javascript",
-        createdAt: new Date(),
-        updatedAt: new Date(),
-      });
-
-    }
-
-    return this.rooms.get(roomId);
   }
 
   getRoom(roomId) {
-    return this.rooms.get(roomId);
+    return roomModel.findByRoomId(roomId);
   }
 
   getRoomState(roomId) {
 
-    const room = this.rooms.get(roomId);
+    const room = roomModel.findByRoomId(roomId);
 
     if (!room) {
       return null;
@@ -41,23 +29,29 @@ class RoomService {
 
   updateCode(roomId, code) {
 
-    const room = this.rooms.get(roomId);
+    const room = roomModel.findByRoomId(roomId);
 
     if (!room) return;
 
     room.code = code;
     room.updatedAt = new Date();
+
+    roomModel.update(roomId, room);
+
   }
 
   updateLanguage(roomId, language) {
 
-    const room = this.rooms.get(roomId);
+    const room = roomModel.findByRoomId(roomId);
 
     if (!room) return;
 
     room.language = language;
     room.updatedAt = new Date();
-  }
+
+    roomModel.update(roomId, room);
+
+}
 
 }
 
