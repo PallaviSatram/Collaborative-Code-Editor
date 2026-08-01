@@ -1,5 +1,6 @@
 require("dotenv").config();
 
+const { connectDB } = require("./src/config/db");
 const http = require("http");
 const { Server } = require("socket.io");
 
@@ -20,6 +21,14 @@ socketHandler(io);
 
 const PORT = process.env.PORT || 5000;
 
-server.listen(PORT, () => {
-    console.log(`Listening on port ${PORT}`);
-});
+async function startServer() {
+
+    await connectDB();
+
+    server.listen(PORT, () => {
+        console.log(`🚀 Server running on port ${PORT}`);
+    });
+
+}
+
+startServer();
