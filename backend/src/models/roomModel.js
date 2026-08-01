@@ -1,33 +1,51 @@
+const { pool } = require("../config/db");
+
 class RoomModel {
 
-    constructor() {
-        this.rooms = new Map();
+    async create(roomId) {
+
+        const query = `
+            INSERT INTO rooms (room_id)
+            VALUES ($1)
+            ON CONFLICT (room_id)
+            DO NOTHING
+            RETURNING *;
+        `;
+
+        await pool.query(query, [roomId]);
+
+        return this.findByRoomId(roomId);
     }
 
-    create(roomId) {
+    async findByRoomId(roomId) {
 
-        if (!this.rooms.has(roomId)) {
+        const query = `
+            SELECT *
+            FROM rooms
+            WHERE room_id = $1;
+        `;
 
-            this.rooms.set(roomId, {
-                code: "",
-                language: "javascript",
-                createdAt: new Date(),
-                updatedAt: new Date(),
-            });
+        const result = await pool.query(query, [roomId]);
 
-        }
-
-        return this.rooms.get(roomId);
-
+        return result.rows[0] || null;
     }
 
-    findByRoomId(roomId) {
-        return this.rooms.get(roomId);
-    }
+    async update(roomId, roomData) {
 
-    update(roomId, roomData) {
+        const query = `
+            UPDATE rooms
+            SET
+                current_code = $1,
+                current_language = $2,
+                updated_at = NOW()
+            WHERE room_id = $3;
+        `;
 
-        this.rooms.set(roomId, roomData);
+        await pool.query(query, [
+            roomData.current_code,
+            roomData.current_language,
+            roomId,
+        ]);
 
     }
 

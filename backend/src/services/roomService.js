@@ -2,56 +2,56 @@ const roomModel = require("../models/roomModel");
 
 class RoomService {
 
-  createRoom(roomId) {
+  async createRoom(roomId) {
 
-    return roomModel.create(roomId);
+    return await roomModel.create(roomId);
 
   }
 
-  getRoom(roomId) {
-    return roomModel.findByRoomId(roomId);
+  async getRoom(roomId) {
+    return await roomModel.findByRoomId(roomId);
   }
 
-  getRoomState(roomId) {
+  async getRoomState(roomId) {
 
-    const room = roomModel.findByRoomId(roomId);
+    const room = await roomModel.findByRoomId(roomId);
 
     if (!room) {
       return null;
     }
 
     return {
-      code: room.code,
-      language: room.language,
+      code: room.current_code,
+      language: room.current_language,
     };
 
   }
 
-  updateCode(roomId, code) {
+  async updateCode(roomId, code) {
 
-    const room = roomModel.findByRoomId(roomId);
+    const room = await roomModel.findByRoomId(roomId);
 
     if (!room) return;
 
-    room.code = code;
-    room.updatedAt = new Date();
+    room.current_code = code;
+    room.uupdated_at = new Date();
 
-    roomModel.update(roomId, room);
+    await roomModel.update(roomId, room);
 
   }
 
-  updateLanguage(roomId, language) {
+  async updateLanguage(roomId, language) {
 
-    const room = roomModel.findByRoomId(roomId);
+    const room = await roomModel.findByRoomId(roomId);
 
     if (!room) return;
 
-    room.language = language;
-    room.updatedAt = new Date();
+    room.current_language = language;
+    room.updated_at = new Date();
 
-    roomModel.update(roomId, room);
+    await roomModel.update(roomId, room);
 
-}
+  }
 
 }
 

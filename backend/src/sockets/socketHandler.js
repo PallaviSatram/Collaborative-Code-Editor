@@ -18,7 +18,7 @@ function socketHandler(io) {
 
         console.log("Socket connected", socket.id);
 
-        socket.on(ACTIONS.JOIN, ({ roomId, username }) => {
+        socket.on(ACTIONS.JOIN,async ({ roomId, username }) => {
 
             console.log("JOIN EVENT");
             console.log("Room:", roomId);
@@ -27,7 +27,7 @@ function socketHandler(io) {
             userSocketMap[socket.id] = username;
 
             socket.join(roomId);
-            roomService.createRoom(roomId);
+            await roomService.createRoom(roomId);
 
             console.log("Rooms after join:", socket.rooms);
 
@@ -43,16 +43,16 @@ function socketHandler(io) {
 
         });
 
-        socket.on(ACTIONS.CODE_CHANGE, ({ roomId, code }) => {
-            roomService.updateCode(roomId, code);
+        socket.on(ACTIONS.CODE_CHANGE, async ({ roomId, code }) => {
+            await roomService.updateCode(roomId, code);
             socket.to(roomId).emit(ACTIONS.CODE_CHANGE, {
                 code,
             });
 
         });
 
-        socket.on(ACTIONS.LANGUAGE_CHANGE, ({ roomId, language }) => {
-            roomService.updateLanguage(roomId, language);
+        socket.on(ACTIONS.LANGUAGE_CHANGE, async ({ roomId, language }) => {
+            await roomService.updateLanguage(roomId, language);
             socket.to(roomId).emit(
                 ACTIONS.LANGUAGE_CHANGE,
                 {
@@ -64,9 +64,9 @@ function socketHandler(io) {
 
         socket.on(
             ACTIONS.SYNC_CODE,
-            ({ socketId, roomId }) => {
+            async ({ socketId, roomId }) => {
 
-                const roomState = roomService.getRoomState(roomId);
+                const roomState = await roomService.getRoomState(roomId);
 
                 if (!roomState) return;
 
