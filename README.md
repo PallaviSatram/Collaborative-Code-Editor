@@ -6,20 +6,6 @@ SyncCode enables multiple developers to collaborate in real time by joining shar
 
 ---
 
-## 📸 Preview
-
-> **(Add screenshots here after completing the UI)**
-
-### Home Page
-
-![Home](./assets/home.png)
-
-### Editor
-
-![Editor](./assets/editor.png)
-
----
-
 ## ✨ Features
 
 ### 👨‍💻 Real-Time Collaboration
