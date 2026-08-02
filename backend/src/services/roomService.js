@@ -76,7 +76,20 @@ class RoomService {
     );
 
   }
+  async cleanupInactiveRooms() {
 
+    const deletedRooms = await roomModel.deleteInactiveRooms();
+
+    if (deletedRooms.length > 0) {
+      console.log(
+        `🗑 Deleted ${deletedRooms.length} inactive room(s).`
+      );
+    } else {
+      console.log(
+        "✅ No inactive rooms to clean."
+      );
+    }
+  }
 }
 
 module.exports = new RoomService();

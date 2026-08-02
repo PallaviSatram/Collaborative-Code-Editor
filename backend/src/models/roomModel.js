@@ -67,6 +67,21 @@ class RoomModel {
         );
 
     }
+    async deleteInactiveRooms() {
+
+        const query = `
+        DELETE FROM rooms
+        WHERE
+            is_active = FALSE
+            AND last_active_at < NOW() - INTERVAL '1 minute'
+        RETURNING room_id;
+    `;
+
+        const result = await pool.query(query);
+
+        return result.rows;
+
+    }
 
 }
 

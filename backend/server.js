@@ -1,5 +1,5 @@
 require("dotenv").config();
-
+const startCleanupScheduler = require("./src/utils/cleanupScheduler");
 const { connectDB } = require("./src/config/db");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -24,6 +24,7 @@ const PORT = process.env.PORT || 5000;
 async function startServer() {
 
     await connectDB();
+    startCleanupScheduler();
 
     server.listen(PORT, () => {
         console.log(`🚀 Server running on port ${PORT}`);
