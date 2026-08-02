@@ -1,16 +1,24 @@
 import { io } from "socket.io-client";
 
+import STORAGE_KEYS from "../constants/storageKeys";
+
 export const initSocket = async () => {
 
-    console.log("Backend URL:", process.env.REACT_APP_BACKEND_URL);
+    const token = localStorage.getItem(
+        STORAGE_KEYS.AUTH_TOKEN
+    );
 
-    const options = {
-        forceNew: true,
-        reconnectionAttempts: Infinity,
-        timeout: 10000,
-        transports: ["websocket"],
-    };
+    return io(
+        process.env.REACT_APP_API_URL,
 
-    return io(process.env.REACT_APP_BACKEND_URL, options);
-
+        {
+            transports: ["websocket"],
+            forceNew: true,
+            reconnectionAttempts: Infinity,
+            timeout: 10000,
+            auth: {
+                token,
+            },
+        }
+    );
 };

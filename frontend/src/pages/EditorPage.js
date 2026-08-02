@@ -1,23 +1,27 @@
+import { useAuth } from "../context/AuthContext";
 import React, { useEffect, useRef, useState } from 'react'
 import Client from '../components/Client';
 import Editor from '../components/Editor';
 import { initSocket } from "../services/socket";
 import ACTIONS from '../constants/Actions';
-import { useLocation, useNavigate, Navigate, useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import toast from 'react-hot-toast';
 
 
 const EditorPage = () => {
+  const { user } = useAuth();
   const reactNavigator = useNavigate();
   const socketRef = useRef(null);
   const [socket, setSocket] = useState(null);
   const codeRef = useRef(null);
   const languageRef = useRef("javascript");
-  const location = useLocation();
   const { roomId } = useParams();
   const [clients, setClients] = useState([]);
 
   useEffect(() => {
+    if (!user) {
+      return;
+    }
     const init = async () => {
       socketRef.current = await initSocket();
       setSocket(socketRef.current);
@@ -34,17 +38,19 @@ const EditorPage = () => {
         reactNavigator('/');
       }
 
-      socketRef.current.emit(ACTIONS.JOIN, {
-        roomId,
-        username: location.state?.username,
-      });
+      socketRef.current.emit(
+        ACTIONS.JOIN,
+        {
+          roomId,
+        }
+      );
 
       // Listening for joined event
       socketRef.current.on(
         ACTIONS.JOINED,
         ({ clients, username, socketId }) => {
 
-          if (username !== location.state.username) {
+          if (username !== user.username) {
 
             toast.success(`${username} joined the room`);
 
@@ -76,12 +82,18 @@ const EditorPage = () => {
     init();
 
     return () => {
+
+      if (!socketRef.current) return;
+
       socketRef.current.off(ACTIONS.JOINED);
       socketRef.current.off(ACTIONS.DISCONNECTED);
-      socketRef.current.disconnect();
-    }
 
-  }, []);
+      socketRef.current.disconnect();
+
+    };
+
+
+  }, [roomId, reactNavigator, user]);
 
   async function copyRoomId() {
     try {
@@ -95,11 +107,6 @@ const EditorPage = () => {
 
   function leaveRoom() {
     reactNavigator('/');
-  }
-
-
-  if (!location.state) {
-    return <Navigate to="/" />
   }
 
   return (

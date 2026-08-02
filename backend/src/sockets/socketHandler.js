@@ -2,30 +2,40 @@ const ACTIONS = require("../constants/Actions");
 const roomService = require("../services/roomService");
 const participantService = require("../services/participantService");
 
-const userSocketMap = {};
+const connectedUsers = {};
 
 function socketHandler(io) {
 
     function getAllConnectedClients(roomId) {
-        return Array.from(io.sockets.adapter.rooms.get(roomId) || []).map(
-            (socketId) => ({
-                socketId,
-                username: userSocketMap[socketId],
-            })
-        );
+
+        return Array.from(
+            io.sockets.adapter.rooms.get(roomId) || []
+        ).map((socketId) => ({
+            socketId,
+            id: connectedUsers[socketId]?.id,
+            username: connectedUsers[socketId]?.username,
+            email: connectedUsers[socketId]?.email,
+        }));
+
     }
 
     io.on("connection", (socket) => {
 
         console.log("Socket connected", socket.id);
 
-        socket.on(ACTIONS.JOIN, async ({ roomId, username }) => {
+        socket.on(ACTIONS.JOIN, async ({ roomId }) => {
 
-            console.log("JOIN EVENT");
-            console.log("Room:", roomId);
-            console.log("User:", username);
+            const username = socket.user.username;
 
-            userSocketMap[socket.id] = username;
+            // console.log("JOIN EVENT");
+            // console.log("Room:", roomId);
+            // console.log("User:", username);
+
+            connectedUsers[socket.id] = {
+                id: socket.user.id,
+                username: socket.user.username,
+                email: socket.user.email,
+            };
 
             socket.join(roomId);
             await roomService.createRoom(roomId);
@@ -90,14 +100,14 @@ function socketHandler(io) {
 
                 socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
                     socketId: socket.id,
-                    username: userSocketMap[socket.id],
+                    username: connectedUsers[socket.id]?.username,
                 });
 
                 if (roomId !== socket.id) {
 
                     await participantService.leaveRoom(
                         roomId,
-                        userSocketMap[socket.id]
+                        connectedUsers[socket.id]
                     );
 
                     const room = io.sockets.adapter.rooms.get(roomId);
@@ -112,7 +122,7 @@ function socketHandler(io) {
 
             }
 
-            delete userSocketMap[socket.id];
+            delete connectedUsers[socket.id];
 
             socket.leave();
 

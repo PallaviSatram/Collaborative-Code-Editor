@@ -1,5 +1,6 @@
 require("dotenv").config();
 const startCleanupScheduler = require("./src/utils/cleanupScheduler");
+const socketAuthMiddleware = require("./src/middleware/socketAuthMiddleware");
 const { connectDB } = require("./src/config/db");
 const http = require("http");
 const { Server } = require("socket.io");
@@ -16,7 +17,7 @@ const io = new Server(server, {
         methods: ["GET", "POST"],
     },
 });
-
+io.use(socketAuthMiddleware);
 socketHandler(io);
 
 const PORT = process.env.PORT || 5000;

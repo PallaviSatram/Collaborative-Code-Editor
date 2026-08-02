@@ -1,100 +1,154 @@
 import React, { useState } from "react";
-import { v4 as uuidv4} from "uuid";
-import toast from 'react-hot-toast'
+import { v4 as uuidv4 } from "uuid";
+import toast from "react-hot-toast";
 import { useNavigate } from "react-router-dom";
-
+import "./Home.css";
+import { useAuth } from "../context/AuthContext";
 
 const Home = () => {
 
   const navigate = useNavigate();
-  const [roomId, setRoomId] = useState('');
-  const [username, setUsername] = useState('');
-  const createNewRoom = (e) => {
+
+  const { user, logout } = useAuth();
+
+  const [roomId, setRoomId] = useState("");
+
+  function createNewRoom(e) {
+
     e.preventDefault();
+
     const id = uuidv4();
+
     setRoomId(id);
-    toast.success('Created a new Room')
-  };
 
-  const joinRoom = () => {
-    if(!roomId || !username){
-      toast.error('Room Id & Username is required');
+    toast.success("New room created.");
+
+  }
+
+  function joinRoom() {
+
+    if (!roomId) {
+
+      toast.error("Room ID is required.");
+
       return;
+
     }
 
-    // redirect
-    navigate(`/editor/${roomId}`, {
-      state : {
-        username,
-      }
-    })
+    navigate(`/editor/${roomId}`);
 
-  };
+  }
 
-  const handleInputEnter = (e) => {
-    if(e.code === 'Enter'){
+  function handleInputEnter(e) {
+
+    if (e.code === "Enter") {
+
       joinRoom();
+
     }
-      
-    
-  };
+
+  }
+
+  function handleLogout() {
+
+    logout();
+
+    toast.success("Logged out successfully.");
+
+    navigate("/login");
+
+  }
 
   return (
-    <div className="homePageWrapper">
 
-  <div className="contentWrapper">
+    <div className="home-page">
 
-    <img
-      src="/sync-code-logo.png"
-      alt="logo"
-      className="home-page-logo"
-    />
+      <div className="home-card">
 
-    <div className="formWrapper">
+        <h1>
 
-      <h4 className="main-label">
-        Paste invitation Room ID
-      </h4>
+          Welcome to SyncCode 👋
 
-      <div className="input-group">
+        </h1>
 
-        <input
-          type="text"
-          className="input-box"
-          placeholder="Room ID"
-          onChange={(e) => {
-            setRoomId(e.target.value)
-          }}
-          value={roomId}
-          onKeyUp={handleInputEnter}
-        />
+        <h2 className="username">
 
-        <input
-          type="text"
-          className="input-box"
-          placeholder="Username"
-          onChange={(e) => {
-            setUsername(e.target.value)
-          }}
-          value={username}
-          onKeyUp={handleInputEnter}
-        />
+          {user?.username}
 
-        <button className="btn join-btn" onClick={joinRoom}>
-          Join
+        </h2>
+
+        <div className="room-section">
+
+          <label>
+
+            Join Existing Room
+
+          </label>
+
+          <input
+            type="text"
+            className="input-box"
+            placeholder="Enter Room ID"
+            value={roomId}
+            onChange={(e) => setRoomId(e.target.value)}
+            onKeyUp={handleInputEnter}
+          />
+
+          <button
+            className="btn join-btn"
+            onClick={joinRoom}
+          >
+
+            Join Room
+
+          </button>
+
+        </div>
+
+        <div className="divider">
+
+          <span>OR</span>
+
+        </div>
+
+        <button
+          className="btn create-btn"
+          onClick={createNewRoom}
+        >
+
+          + Create New Room
+
         </button>
 
-        <span className="create-info"> If you don't have an invite then create <a href="/" onClick={createNewRoom} className="create-new-btn">new Room</a> </span>
+        <button
+          className="btn logout-btn"
+          onClick={handleLogout}
+        >
+
+          Logout
+
+        </button>
 
       </div>
+
+      <footer>
+
+        Built with ⭐ by
+
+        {" "}
+
+        <a href="https://github.com/PallaviSatram">
+
+          Pallavi Satram
+
+        </a>
+
+      </footer>
+
     </div>
 
-  </div>
-  <footer>
-        <h4>Built with ⭐ by <a href="https://github.com/PallaviSatram">Pallavi Satram</a></h4>
-      </footer>
-</div>
-  )
-}
+  );
+
+};
 
 export default Home;
