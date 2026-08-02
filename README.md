@@ -1,70 +1,318 @@
-# Getting Started with Create React App
+# 🚀 SyncCode
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+> A production-ready real-time collaborative code editor built with the MERN Stack, Socket.IO, PostgreSQL, and JWT Authentication.
 
-## Available Scripts
+SyncCode enables multiple developers to collaborate in real time by joining shared rooms, writing code together, and synchronizing code changes instantly. It provides secure authentication, persistent room storage, participant tracking, and a scalable backend architecture.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 📸 Preview
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+> **(Add screenshots here after completing the UI)**
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### Home Page
 
-### `npm test`
+![Home](./assets/home.png)
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### Editor
 
-### `npm run build`
+![Editor](./assets/editor.png)
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+---
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+## ✨ Features
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+### 👨‍💻 Real-Time Collaboration
 
-### `npm run eject`
+- Real-time collaborative code editing
+- Multiple users can join the same room
+- Live code synchronization using Socket.IO
+- Live programming language synchronization
+- Auto-sync editor state when a new participant joins
+- Participant tracking
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+---
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+### 🔐 Authentication
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+- User Registration
+- User Login
+- JWT Authentication
+- Password hashing using bcrypt
+- Protected API Routes
+- Protected Socket.IO Connections
+- React Context API for authentication state
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+---
 
-## Learn More
+### 🗄 Database
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+- PostgreSQL integration
+- Persistent room storage
+- Persistent code storage
+- Persistent language storage
+- Room activity tracking
+- Automatic cleanup of inactive rooms
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+---
 
-### Code Splitting
+### ⚙ Backend Architecture
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+- Express.js REST APIs
+- Layered Architecture
+- Controllers
+- Services
+- Models
+- Routes
+- Middleware
+- Socket Middleware
+- Scheduler for inactive room cleanup
 
-### Analyzing the Bundle Size
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+### 🎨 Frontend
 
-### Making a Progressive Web App
+- React.js
+- Context API
+- React Router
+- Axios
+- React Hot Toast
+- Responsive UI
+- Dark Theme
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+---
 
-### Advanced Configuration
+## 🏗 Tech Stack
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+### Frontend
 
-### Deployment
+- React.js
+- React Router DOM
+- Socket.IO Client
+- Axios
+- React Hot Toast
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+### Backend
 
-### `npm run build` fails to minify
+- Node.js
+- Express.js
+- Socket.IO
+- JWT
+- bcrypt
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+### Database
+
+- PostgreSQL
+
+### Tools
+
+- Git
+- GitHub
+- VS Code
+
+---
+
+## 📂 Project Structure
+
+```text
+SyncCode
+│
+├── frontend
+│   ├── src
+│   │   ├── components
+│   │   ├── context
+│   │   ├── hooks
+│   │   ├── pages
+│   │   ├── routes
+│   │   ├── services
+│   │   ├── constants
+│   │   └── utils
+│   │
+│   └── public
+│
+├── backend
+│   ├── src
+│   │   ├── config
+│   │   ├── constants
+│   │   ├── controllers
+│   │   ├── middleware
+│   │   ├── models
+│   │   ├── routes
+│   │   ├── scheduler
+│   │   ├── services
+│   │   └── sockets
+│   │
+│   └── server.js
+│
+└── README.md
+```
+
+---
+
+## 🔄 Application Flow
+
+```text
+User
+   │
+   ▼
+Login / Register
+   │
+   ▼
+JWT Authentication
+   │
+   ▼
+Home Dashboard
+   │
+   ▼
+Join / Create Room
+   │
+   ▼
+Socket.IO Connection
+   │
+   ▼
+Collaborative Editor
+```
+
+---
+
+## 🔐 Authentication Flow
+
+```text
+Register
+
+↓
+
+PostgreSQL
+
+↓
+
+Login
+
+↓
+
+JWT Token
+
+↓
+
+React Context
+
+↓
+
+Protected Routes
+
+↓
+
+Socket Authentication
+```
+
+---
+
+## ⚡ Installation
+
+### Clone Repository
+
+```bash
+git clone https://github.com/PallaviSatram/Collaborative-Code-Editor.git
+```
+
+---
+
+### Backend
+
+```bash
+cd backend
+
+npm install
+```
+
+Create a `.env` file:
+
+```env
+PORT=5000
+
+DATABASE_URL=YOUR_POSTGRES_CONNECTION_STRING
+
+JWT_SECRET=YOUR_SECRET_KEY
+```
+
+Run:
+
+```bash
+npm run dev
+```
+
+---
+
+### Frontend
+
+```bash
+cd frontend
+
+npm install
+```
+
+Create a `.env` file:
+
+```env
+REACT_APP_API_URL=http://localhost:5000
+```
+
+Run:
+
+```bash
+npm start
+```
+
+---
+
+## 🚀 Future Enhancements
+
+- Code Execution
+- Recent Rooms Dashboard
+- User Profiles
+- Room Ownership
+- Invite Links
+- Chat System
+- File Explorer
+- Theme Customization
+- Docker Deployment
+- CI/CD Pipeline
+
+---
+
+## 📖 What I Learned
+
+While building SyncCode, I gained hands-on experience with:
+
+- Designing scalable backend architecture
+- Real-time communication using Socket.IO
+- JWT Authentication
+- PostgreSQL integration
+- REST API development
+- React Context API
+- WebSocket authentication
+- Layered project structure
+- State synchronization
+- Git & GitHub workflows
+
+---
+
+## 🤝 Contributing
+
+Contributions, issues, and feature requests are welcome.
+
+Feel free to fork the project and submit a pull request.
+
+---
+
+## 👩‍💻 Author
+
+**Pallavi Satram**
+
+GitHub: https://github.com/PallaviSatram
+
+---
+
+## ⭐ Support
+
+If you found this project helpful, consider giving it a ⭐ on GitHub.
