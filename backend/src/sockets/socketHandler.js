@@ -1,5 +1,6 @@
 const ACTIONS = require("../constants/Actions");
 const roomService = require("../services/roomService");
+const participantService = require("../services/participantService");
 
 const userSocketMap = {};
 
@@ -18,7 +19,7 @@ function socketHandler(io) {
 
         console.log("Socket connected", socket.id);
 
-        socket.on(ACTIONS.JOIN,async ({ roomId, username }) => {
+        socket.on(ACTIONS.JOIN, async ({ roomId, username }) => {
 
             console.log("JOIN EVENT");
             console.log("Room:", roomId);
@@ -28,6 +29,9 @@ function socketHandler(io) {
 
             socket.join(roomId);
             await roomService.createRoom(roomId);
+            await participantService.joinRoom(roomId, username);
+
+            await roomService.activateRoom(roomId);
 
             console.log("Rooms after join:", socket.rooms);
 
@@ -78,21 +82,35 @@ function socketHandler(io) {
             }
         );
 
-        socket.on("disconnecting", () => {
+        socket.on("disconnecting", async () => {
 
             const rooms = [...socket.rooms];
 
-            rooms.forEach((roomId) => {
+            for (const roomId of rooms) {
 
-                socket.to(roomId).emit(
-                    ACTIONS.DISCONNECTED,
-                    {
-                        socketId: socket.id,
-                        username: userSocketMap[socket.id],
+                socket.in(roomId).emit(ACTIONS.DISCONNECTED, {
+                    socketId: socket.id,
+                    username: userSocketMap[socket.id],
+                });
+
+                if (roomId !== socket.id) {
+
+                    await participantService.leaveRoom(
+                        roomId,
+                        userSocketMap[socket.id]
+                    );
+
+                    const room = io.sockets.adapter.rooms.get(roomId);
+
+                    if (!room || room.size === 1) {
+
+                        await roomService.deactivateRoom(roomId);
+
                     }
-                );
 
-            });
+                }
+
+            }
 
             delete userSocketMap[socket.id];
 

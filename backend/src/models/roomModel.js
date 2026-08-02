@@ -48,6 +48,25 @@ class RoomModel {
         ]);
 
     }
+    async updateRoomStatus(roomId, isActive) {
+
+        const query = `
+        UPDATE rooms
+        SET
+            is_active = $1,
+            last_active_at = NOW()
+        WHERE room_id = $2;
+    `;
+
+        await pool.query(
+            query,
+            [
+                isActive,
+                roomId,
+            ]
+        );
+
+    }
 
 }
 
