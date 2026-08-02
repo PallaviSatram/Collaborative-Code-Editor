@@ -1,6 +1,6 @@
 # 🚀 SyncCode
 
-> A production-ready real-time collaborative code editor built with the MERN Stack, Socket.IO, PostgreSQL, and JWT Authentication.
+> A real-time collaborative code editor built with React.js, Node.js, Express.js, PostgreSQL, Socket.IO, and JWT Authentication.
 
 SyncCode enables multiple developers to collaborate in real time by joining shared rooms, writing code together, and synchronizing code changes instantly. It provides secure authentication, persistent room storage, participant tracking, and a scalable backend architecture.
 
