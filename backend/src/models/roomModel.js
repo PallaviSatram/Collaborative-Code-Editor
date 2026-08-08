@@ -2,18 +2,21 @@ const { pool } = require("../config/db");
 
 class RoomModel {
 
-    async create(roomId) {
-
+    async create(roomId, roomName) {
         const query = `
-            INSERT INTO rooms (room_id)
-            VALUES ($1)
-            ON CONFLICT (room_id)
-            DO NOTHING
-            RETURNING *;
-        `;
-
-        await pool.query(query, [roomId]);
-
+        INSERT INTO rooms (
+            room_id,
+            room_name
+        )
+        VALUES ($1, $2)
+        ON CONFLICT (room_id)
+        DO NOTHING
+        RETURNING *;
+    `;
+        await pool.query(query, [
+            roomId,
+            roomName,
+        ]);
         return this.findByRoomId(roomId);
     }
 
@@ -33,15 +36,17 @@ class RoomModel {
     async update(roomId, roomData) {
 
         const query = `
-            UPDATE rooms
-            SET
-                current_code = $1,
-                current_language = $2,
-                updated_at = NOW()
-            WHERE room_id = $3;
-        `;
+        UPDATE rooms
+        SET
+            room_name = $1,
+            current_code = $2,
+            current_language = $3,
+            updated_at = NOW()
+        WHERE room_id = $4;
+    `;
 
         await pool.query(query, [
+            roomData.room_name,
             roomData.current_code,
             roomData.current_language,
             roomId,

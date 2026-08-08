@@ -5,12 +5,15 @@ class RoomService {
     this.saveTimers = new Map();
   }
 
-  async createRoom(roomId) {
+  async createRoom(roomId, roomName) {
     let room = await roomModel.findByRoomId(roomId);
     if (room) {
       return room;
     }
-    return await roomModel.create(roomId);
+    return await roomModel.create(
+      roomId,
+      roomName
+    );
   }
 
   async getRoom(roomId) {
@@ -26,6 +29,7 @@ class RoomService {
     }
 
     return {
+      roomName: room.room_name,
       code: room.current_code,
       language: room.current_language,
     };
@@ -54,7 +58,6 @@ class RoomService {
     if (!room) return;
 
     room.current_language = language;
-    room.updated_at = new Date();
 
     await roomModel.update(roomId, room);
 

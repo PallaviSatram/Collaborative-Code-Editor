@@ -23,7 +23,7 @@ function socketHandler(io) {
 
         console.log("Socket connected", socket.id);
 
-        socket.on(ACTIONS.JOIN, async ({ roomId }) => {
+        socket.on(ACTIONS.JOIN, async ({ roomId, roomName }) => {
 
             const username = socket.user.username;
 
@@ -38,7 +38,10 @@ function socketHandler(io) {
             };
 
             socket.join(roomId);
-            await roomService.createRoom(roomId);
+            await roomService.createRoom(
+                roomId,
+                roomName
+            );
             await participantService.joinRoom(roomId, username);
 
             await roomService.activateRoom(roomId);

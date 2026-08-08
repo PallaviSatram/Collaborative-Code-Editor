@@ -12,16 +12,20 @@ const Home = () => {
   const { user, logout } = useAuth();
 
   const [roomId, setRoomId] = useState("");
+  const [roomName, setRoomName] = useState("");
 
-  function createNewRoom(e) {
-
-    e.preventDefault();
+  function createNewRoom() {
 
     const id = uuidv4();
 
     setRoomId(id);
 
-    toast.success("New room created.");
+    navigate(`/editor/${id}`, {
+      state: {
+        roomName:
+          roomName.trim() || "Untitled Room",
+      },
+    });
 
   }
 
@@ -60,29 +64,18 @@ const Home = () => {
   }
 
   return (
-
     <div className="home-page">
-
       <div className="home-card">
-
         <h1>
-
           Welcome to SyncCode 👋
-
         </h1>
-
         <h2 className="username">
-
           {user?.username}
-
         </h2>
 
         <div className="room-section">
-
           <label>
-
             Join Existing Room
-
           </label>
 
           <input
@@ -110,15 +103,34 @@ const Home = () => {
           <span>OR</span>
 
         </div>
+        <div className="room-section">
 
-        <button
-          className="btn create-btn"
-          onClick={createNewRoom}
-        >
+          <label>
 
-          + Create New Room
+            Create New Room
 
-        </button>
+          </label>
+
+          <input
+            type="text"
+            className="input-box"
+            placeholder="Room Name (Optional)"
+            value={roomName}
+            onChange={(e) =>
+              setRoomName(e.target.value)
+            }
+          />
+
+          <button
+            className="btn create-btn"
+            onClick={createNewRoom}
+          >
+
+            Create Room
+
+          </button>
+
+        </div>
 
         <button
           className="btn logout-btn"

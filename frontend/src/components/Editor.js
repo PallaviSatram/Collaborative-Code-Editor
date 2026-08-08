@@ -20,7 +20,7 @@ import { dracula } from '@uiw/codemirror-theme-dracula';
 
 import ACTIONS from '../constants/Actions';
 
-const Editor = ({ socket, roomId, onCodeChange, onLanguageChange }) => {
+const Editor = ({ socket, roomId, onCodeChange, onLanguageChange, onRoomNameChange }) => {
 
   const editorRef = useRef(null);
 
@@ -91,18 +91,22 @@ const Editor = ({ socket, roomId, onCodeChange, onLanguageChange }) => {
 
     socket.on(
       ACTIONS.SYNC_CODE,
-      ({ code, language }) => {
-        console.log("SYNC_CODE RECEIVED");
-        console.log("Language:", language);
+      ({ code, language, roomName }) => {
+        console.log("SYNC_CODE Room Name:", roomName);
         if (code !== null) {
           setCode(code);
         }
 
         if (language) {
           setLanguage(language);
+
           if (onLanguageChange) {
             onLanguageChange(language);
           }
+        }
+
+        if (roomName && onRoomNameChange) {
+          onRoomNameChange(roomName);
         }
 
       }
@@ -124,7 +128,7 @@ const Editor = ({ socket, roomId, onCodeChange, onLanguageChange }) => {
 
     };
 
-  }, [socket,  onLanguageChange]);
+  }, [socket, onLanguageChange]);
 
   return (
     <>

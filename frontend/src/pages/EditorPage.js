@@ -4,11 +4,12 @@ import Client from '../components/Client';
 import Editor from '../components/Editor';
 import { initSocket } from "../services/socket";
 import ACTIONS from '../constants/Actions';
-import { useNavigate, useParams } from 'react-router-dom';
+import { useLocation, useNavigate, useParams } from "react-router-dom";
 import toast from 'react-hot-toast';
 
 
 const EditorPage = () => {
+  const location = useLocation();
   const { user } = useAuth();
   const reactNavigator = useNavigate();
   const socketRef = useRef(null);
@@ -17,6 +18,9 @@ const EditorPage = () => {
   const languageRef = useRef("javascript");
   const { roomId } = useParams();
   const [clients, setClients] = useState([]);
+  const [roomName, setRoomName] = useState(
+    location.state?.roomName || "Untitled Room"
+  );
 
   useEffect(() => {
     if (!user) {
@@ -42,6 +46,9 @@ const EditorPage = () => {
         ACTIONS.JOIN,
         {
           roomId,
+          roomName:
+            location.state?.roomName ||
+            "Untitled Room",
         }
       );
 
@@ -120,7 +127,22 @@ const EditorPage = () => {
             ></img>
           </div>
 
-          <h3 className='connected'>connected</h3>
+          <div className="room-header">
+
+            <h2 className="room-title">
+
+              📁 {roomName}
+
+            </h2>
+            <p className="participants-count">
+
+              👥 {clients.length} Participant{clients.length !== 1 ? "s" : ""}
+
+            </p>
+
+          </div>
+
+          <hr className="sidebar-divider"/>
 
           <div className='clients-list'>
             {
@@ -142,6 +164,9 @@ const EditorPage = () => {
           }}
           onLanguageChange={(language) => {
             languageRef.current = language;
+          }}
+          onRoomNameChange={(name) => {
+            setRoomName(name);
           }}
         />
       </div>

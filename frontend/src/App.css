@@ -106,61 +106,102 @@ footer a{
 }
 
 .aside{
- background: #1E293B;
- padding: 16px;
- color: #fff;
- display: flex;
- flex-direction: column;
+  background: #1E293B;
+  padding: 20px 16px;
+  color: #fff;
+  display: flex;
+  flex-direction: column;
 }
 
 .aside-inner{
- flex: 1;
-}
-.logo-image{
-  transform: translateY(-40px);
-  margin-left: -40px;
-  width: 250px;
+    flex: 1;
+    overflow-y: auto;
+    padding-right: 4px;
 }
 
-.connected{
-  transform: translateY(-90px);
+.aside-inner::-webkit-scrollbar{
+    width:6px;
+}
+
+.aside-inner::-webkit-scrollbar-track{
+    background:#1E293B;
+}
+
+.aside-inner::-webkit-scrollbar-thumb{
+    background:#475569;
+    border-radius:10px;
+}
+
+.aside-inner::-webkit-scrollbar-thumb:hover{
+    background:#64748B;
+}
+.logo{
+  display: flex;
+  justify-content: center;
+  margin-bottom: 25px;
+}
+
+.logo-image{
+  width: 170px;
+}
+
+.room-header{
+  text-align: center;
+  margin-bottom: 28px;
+}
+
+.room-title{
+  color: #22C55E;
+  font-size: 24px;
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+
+.participants-count{
+  color: #94A3B8;
+  font-size: 18px;
+  font-weight: 500;
 }
 
 .clients-list{
-  transform: translateY(-90px);
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap:20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
+    gap: 22px 16px;
+    margin-top: 25px;
+    justify-items: center;
+    align-items: start;
 }
 
 .client{
-  display: flex;
-  align-items: center;
-  flex-direction: column;
-  font-weight: bold;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 80px;
 }
 
-.username{
-  margin-top: 10px;
+.sidebar-divider{
+
+  border:none;
+  border-top:1px solid #334155;
+  margin-bottom:22px;
+
 }
 
 .copy-btn,
 .leave-btn{
-  width: 100%;
-  padding: 12px;
-  border: none;
-  border-radius: 8px;
-  font-size: 16px;
-  font-weight: 600;
-  cursor: pointer;
-  transition: 0.2s ease;
+  width: 180px;
+  height: 46px;
+  align-self: center;
+  font-size: 15px;
+  border-radius: 10px;
   margin-bottom: 12px;
 }
 
 .copy-btn{
   background: #fff;
   color: rgb(0, 0, 0);
+  margin-top: auto;
 }
 
 .copy-btn:hover{

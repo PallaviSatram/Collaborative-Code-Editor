@@ -35,18 +35,18 @@
     margin: 0;
     font-size: 34px;
 }
-
-.username {
-    margin-top: 12px;
-    margin-bottom: 35px;
-
+.username{
+    margin-top: 8px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #22C55E;
     text-align: center;
 
-    color: #22C55E;
+    width: 100%;
 
-    font-size: 24px;
-
-    font-weight: 700;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .room-section {
@@ -55,63 +55,37 @@
 }
 
 .room-section label {
-
     color: white;
-
     margin-bottom: 12px;
-
     font-weight: 600;
-
     font-size: 18px;
-
 }
 
 .room-section .input-box {
-
     width: 100%;
-
     background: #334155;
-
     color: white;
-
     border: none;
-
     outline: none;
-
     padding: 16px;
-
     border-radius: 12px;
-
     font-size: 16px;
-
     margin-bottom: 22px;
-
 }
 
 .room-section .input-box:focus {
-
     outline: 2px solid #22C55E;
-
 }
 
 .btn {
-
     width: 100%;
-
     border: none;
-
     border-radius: 12px;
-
     padding: 16px;
-
     font-size: 17px;
-
     font-weight: 600;
-
     cursor: pointer;
-
     transition: .25s;
-
 }
 
 .join-btn {
