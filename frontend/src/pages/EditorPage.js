@@ -1,11 +1,15 @@
+import api from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import React, { useEffect, useRef, useState } from 'react'
 import Client from '../components/Client';
 import Editor from '../components/Editor';
+import VersionCard from "../components/VersionCard";
 import { initSocket } from "../services/socket";
 import ACTIONS from '../constants/Actions';
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import toast from 'react-hot-toast';
+import STORAGE_KEYS from "../constants/storageKeys";
+
 
 
 const EditorPage = () => {
@@ -18,6 +22,11 @@ const EditorPage = () => {
   const languageRef = useRef("javascript");
   const { roomId } = useParams();
   const [clients, setClients] = useState([]);
+  const [showVersionHistory, setShowVersionHistory] = useState(false);
+  const [versions, setVersions] = useState([]);
+  const [isLoadingVersions, setIsLoadingVersions] = useState(false);
+  const [selectedVersion, setSelectedVersion] = useState(null);
+  const [isLoadingVersion, setIsLoadingVersion] = useState(false);
   const [roomName, setRoomName] = useState(
     location.state?.roomName || "Untitled Room"
   );
@@ -116,6 +125,94 @@ const EditorPage = () => {
     reactNavigator('/');
   }
 
+  async function fetchVersions() {
+    try {
+
+      setIsLoadingVersions(true);
+
+      const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
+
+      const response = await fetch(
+        `http://localhost:5000/api/versions/room/${roomId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to fetch versions"
+        );
+      }
+
+      setVersions(data.versions || []);
+
+    } catch (error) {
+
+      console.error(
+        "❌ Fetch versions error:",
+        error
+      );
+
+      toast.error("Failed to load version history");
+
+    } finally {
+
+      setIsLoadingVersions(false);
+
+    }
+  }
+  async function fetchVersion(versionId) {
+    try {
+
+      setIsLoadingVersion(true);
+      setSelectedVersion(null);
+
+      const token = localStorage.getItem(
+        STORAGE_KEYS.AUTH_TOKEN
+      );
+
+      const response = await fetch(
+        `http://localhost:5000/api/versions/${versionId}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${token}`,
+          },
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to fetch version"
+        );
+      }
+
+      setSelectedVersion(data.version);
+
+    } catch (error) {
+
+      console.error(
+        "❌ Fetch version error:",
+        error
+      );
+
+      toast.error("Failed to load version");
+
+    } finally {
+
+      setIsLoadingVersion(false);
+
+    }
+  }
+
   return (
     <div className='main-wrap'>
       <div className='aside'>
@@ -127,30 +224,130 @@ const EditorPage = () => {
             ></img>
           </div>
 
-          <div className="room-header">
+          {showVersionHistory ? (
 
-            <h2 className="room-title">
+            <div className="version-history-panel">
 
-              📁 {roomName}
+              <button
+                type="button"
+                className="version-history-back"
+                onClick={() => setShowVersionHistory(false)}
+              >
+                ← Back
+              </button>
 
-            </h2>
-            <p className="participants-count">
+              <div className="version-history-header">
+                <h2 className="room-title">
+                  📜 Version History
+                </h2>
+              </div>
 
-              👥 {clients.length} Participant{clients.length !== 1 ? "s" : ""}
+              <hr className="sidebar-divider" />
 
-            </p>
+              <div className="version-list">
 
-          </div>
+                {isLoadingVersions ? (
 
-          <hr className="sidebar-divider"/>
+                  <p className="version-empty">
+                    Loading versions...
+                  </p>
 
-          <div className='clients-list'>
-            {
-              clients.map((client) => (
-                <Client key={client.socketId} username={client.username} />
-              ))
-            }
-          </div>
+                ) : versions.length === 0 ? (
+
+                  <p className="version-empty">
+                    No saved versions yet.
+                  </p>
+
+                ) : (
+
+                  versions.map((version) => (
+                    <VersionCard
+                      key={version.id}
+                      version={version}
+                      onClick={fetchVersion}
+                    />
+                  ))
+
+                )}
+
+              </div>
+              {selectedVersion && (
+                <div className="selected-version-panel">
+
+                  <h3>
+                    Version {selectedVersion.id}
+                  </h3>
+
+                  <p>
+                    <strong>Message:</strong>{" "}
+                    {selectedVersion.message}
+                  </p>
+
+                  <p>
+                    <strong>Author:</strong>{" "}
+                    {selectedVersion.username}
+                  </p>
+
+                  <p>
+                    <strong>Language:</strong>{" "}
+                    {selectedVersion.language}
+                  </p>
+
+                  <pre className="version-code-preview">
+                    {isLoadingVersion
+                      ? "Loading..."
+                      : selectedVersion.code}
+                  </pre>
+
+                </div>
+              )}
+            </div>
+
+          ) : (
+
+            <>
+
+              <div className="room-header">
+
+                <h2 className="room-title">
+                  📁 {roomName}
+                </h2>
+
+                <p className="participants-count">
+                  👥 {clients.length} Participant{clients.length !== 1 ? "s" : ""}
+                </p>
+
+              </div>
+
+              <hr className="sidebar-divider" />
+
+              <div className="clients-list">
+
+                {
+                  clients.map((client) => (
+                    <Client
+                      key={client.socketId}
+                      username={client.username}
+                    />
+                  ))
+                }
+
+              </div>
+
+              <button
+                type="button"
+                className="version-history-btn"
+                onClick={() => {
+                  setShowVersionHistory(true);
+                  fetchVersions();
+                }}
+              >
+                📜 Version History
+              </button>
+
+            </>
+
+          )}
         </div>
         <button className='btn copy-btn' onClick={copyRoomId}>COPY ROOM ID</button>
         <button className='btn leave-btn' onClick={leaveRoom}>Leave</button>

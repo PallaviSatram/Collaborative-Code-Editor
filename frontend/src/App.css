@@ -250,3 +250,116 @@ footer a{
   background: #1E293B;
   color: white;
 }
+
+.version-history-btn {
+  width: 100%;
+  margin-top: 15px;
+  padding: 10px 12px;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.version-history-back {
+  color: #04ef5e;
+  background: none;
+  border: none;
+  cursor: pointer;
+  font-size: 20px;
+  padding: 5px 0 15px 0;
+}
+
+.version-history-panel {
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  min-height: 0;
+}
+
+.version-history-header {
+  display: flex;
+  align-items: center;
+}
+
+.version-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+
+.version-empty {
+  text-align: center;
+  margin-top: 30px;
+  font-size: 14px;
+}
+.version-list {
+  flex: 1;
+  overflow-y: auto;
+  min-height: 0;
+}
+.clients-list{
+  overflow-y: auto;
+}
+
+.version-card {
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 8px;
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.version-card-header {
+  font-size: 15px;
+  margin-bottom: 6px;
+}
+
+.version-message {
+  margin: 5px 0 10px;
+  font-size: 14px;
+  word-break: break-word;
+}
+
+.version-meta {
+  font-size: 12px;
+  margin-top: 4px;
+  opacity: 0.8;
+}
+.version-card {
+  cursor: pointer;
+  transition: transform 0.2s ease, background-color 0.2s ease;
+}
+
+.version-card:hover {
+  transform: translateY(-2px);
+}
+
+.selected-version-panel {
+  margin-top: 20px;
+  padding: 16px;
+  border-radius: 10px;
+  background: #2c3a50;
+}
+
+.selected-version-panel h3 {
+  margin-bottom: 12px;
+  color: #22c55e;
+}
+
+.selected-version-panel p {
+  margin: 6px 0;
+}
+
+.version-code-preview {
+  margin-top: 15px;
+  padding: 12px;
+  border-radius: 8px;
+  background: #1e2430;
+  color: #ffffff;
+  white-space: pre-wrap;
+  overflow-x: auto;
+  max-height: 250px;
+  overflow-y: auto;
+  font-family: monospace;
+}
