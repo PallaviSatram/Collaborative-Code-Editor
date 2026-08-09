@@ -78,7 +78,7 @@ class RoomModel {
         DELETE FROM rooms
         WHERE
             is_active = FALSE
-            AND last_active_at < NOW() - INTERVAL '1 minute'
+            AND last_active_at < NOW() - INTERVAL '1 month'
         RETURNING room_id;
     `;
 

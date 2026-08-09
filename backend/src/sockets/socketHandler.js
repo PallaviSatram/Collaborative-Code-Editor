@@ -57,6 +57,16 @@ function socketHandler(io) {
                     socketId: socket.id,
                 });
             });
+            
+            // Send existing room state to the newly joined user
+            const roomState = await roomService.getRoomState(roomId);
+
+            if (roomState) {
+                io.to(socket.id).emit(
+                    ACTIONS.SYNC_CODE,
+                    roomState
+                );
+            }
 
         });
 
