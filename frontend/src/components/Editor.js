@@ -68,6 +68,10 @@ const Editor = ({ socket, roomId, onCodeChange, onLanguageChange, onRoomNameChan
     const handleCodeChange = ({ code }) => {
       if (code !== null) {
         setCode(code);
+
+        if (onCodeChange) {
+          onCodeChange(code);
+        }
       }
     };
 
@@ -95,6 +99,10 @@ const Editor = ({ socket, roomId, onCodeChange, onLanguageChange, onRoomNameChan
         console.log("SYNC_CODE Room Name:", roomName);
         if (code !== null) {
           setCode(code);
+
+          if (onCodeChange) {
+            onCodeChange(code);
+          }
         }
 
         if (language) {

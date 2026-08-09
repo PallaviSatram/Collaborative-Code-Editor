@@ -22,11 +22,15 @@ const EditorPage = () => {
   const languageRef = useRef("javascript");
   const { roomId } = useParams();
   const [clients, setClients] = useState([]);
+  const [showSaveVersion, setShowSaveVersion] = useState(false);
+  const [versionMessage, setVersionMessage] = useState("");
+  const [isSavingVersion, setIsSavingVersion] = useState(false);
   const [showVersionHistory, setShowVersionHistory] = useState(false);
   const [versions, setVersions] = useState([]);
   const [isLoadingVersions, setIsLoadingVersions] = useState(false);
   const [selectedVersion, setSelectedVersion] = useState(null);
   const [isLoadingVersion, setIsLoadingVersion] = useState(false);
+
   const [roomName, setRoomName] = useState(
     location.state?.roomName || "Untitled Room"
   );
@@ -125,6 +129,67 @@ const EditorPage = () => {
     reactNavigator('/');
   }
 
+  async function saveVersion() {
+
+    if (!versionMessage.trim()) {
+      toast.error("Version message is required");
+      return;
+    }
+
+    try {
+
+      setIsSavingVersion(true);
+
+      const token = localStorage.getItem(
+        STORAGE_KEYS.AUTH_TOKEN
+      );
+
+      const response = await fetch(
+        "http://localhost:5000/api/versions",
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            Authorization: `Bearer ${token}`,
+          },
+          body: JSON.stringify({
+            roomId,
+            message: versionMessage.trim(),
+            code: codeRef.current || "",
+            language: languageRef.current,
+          }),
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        throw new Error(
+          data.message || "Failed to save version"
+        );
+      }
+
+      toast.success("Version saved successfully");
+
+      setVersionMessage("");
+      setShowSaveVersion(false);
+
+    } catch (error) {
+
+      console.error(
+        "❌ Save version error:",
+        error
+      );
+
+      toast.error("Failed to save version");
+
+    } finally {
+
+      setIsSavingVersion(false);
+
+    }
+  }
+
   async function fetchVersions() {
     try {
 
@@ -167,7 +232,7 @@ const EditorPage = () => {
 
     }
   }
-  async function fetchVersion(versionId) {
+  async function fetchVersion(versionId, versionNumber) {
     try {
 
       setIsLoadingVersion(true);
@@ -195,7 +260,10 @@ const EditorPage = () => {
         );
       }
 
-      setSelectedVersion(data.version);
+      setSelectedVersion({
+        ...data.version,
+        versionNumber,
+      });
 
     } catch (error) {
 
@@ -260,10 +328,11 @@ const EditorPage = () => {
 
                 ) : (
 
-                  versions.map((version) => (
+                  versions.map((version, index) => (
                     <VersionCard
                       key={version.id}
                       version={version}
+                      versionNumber={versions.length - index}
                       onClick={fetchVersion}
                     />
                   ))
@@ -275,7 +344,7 @@ const EditorPage = () => {
                 <div className="selected-version-panel">
 
                   <h3>
-                    Version {selectedVersion.id}
+                    Version {selectedVersion.versionNumber}
                   </h3>
 
                   <p>
@@ -344,6 +413,60 @@ const EditorPage = () => {
               >
                 📜 Version History
               </button>
+              <button
+                type="button"
+                className="save-version-btn"
+                onClick={() => setShowSaveVersion(true)}
+              >
+                💾 Save Version
+              </button>
+
+              {showSaveVersion && (
+                <div className="save-version-panel">
+
+                  <h3>💾 Save Current Version</h3>
+
+                  <p>
+                    Enter a message for this version.
+                  </p>
+
+                  <textarea
+                    value={versionMessage}
+                    onChange={(e) =>
+                      setVersionMessage(e.target.value)
+                    }
+                    placeholder="e.g. Added login functionality"
+                    maxLength={200}
+                    rows={4}
+                  />
+
+                  <div className="save-version-actions">
+
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setVersionMessage("");
+                        setShowSaveVersion(false);
+                      }}
+                      disabled={isSavingVersion}
+                    >
+                      Cancel
+                    </button>
+
+                    <button
+                      type="button"
+                      onClick={saveVersion}
+                      disabled={isSavingVersion}
+                    >
+                      {isSavingVersion
+                        ? "Saving..."
+                        : "Save Version"}
+                    </button>
+
+                  </div>
+
+                </div>
+              )}
 
             </>
 

@@ -1,15 +1,15 @@
 import React from "react";
 
-const VersionCard = ({ version, onClick }) => {
+const VersionCard = ({ version, versionNumber,onClick }) => {
   return (
     <div
       className="version-card"
-      onClick={() => onClick(version.id)}
+      onClick={() => onClick(version.id, versionNumber)}
     >
 
       <div className="version-card-header">
         <strong>
-          Version {version.id}
+          Version {versionNumber}
         </strong>
       </div>
 
