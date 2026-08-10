@@ -16,6 +16,27 @@ SyncCode enables multiple developers to collaborate in real time by joining shar
 - Live programming language synchronization
 - Auto-sync editor state when a new participant joins
 - Participant tracking
+- Real-time collaborator cursor movement
+- Display collaborator username near their cursor
+- Stable color assigned to each collaborator
+- Collaborator cursor and username use the same color
+
+---
+
+### 📜 Version History
+
+- Save the current code as a version
+- View saved versions for the current room
+- Version numbers follow a sequential order within each room
+- View version details including:
+  - Version number
+  - Commit message
+  - Author
+  - Programming language
+  - Saved code
+  - Creation timestamp
+- Version history is persisted in PostgreSQL
+- Users can copy saved code for manual restoration
 
 ---
 
@@ -37,12 +58,13 @@ SyncCode enables multiple developers to collaborate in real time by joining shar
 - Persistent room storage
 - Persistent code storage
 - Persistent language storage
+- Persistent version history
 - Room activity tracking
 - Automatic cleanup of inactive rooms
 
 ---
 
-### ⚙ Backend Architecture
+### ⚙️ Backend Architecture
 
 - Express.js REST APIs
 - Layered Architecture
@@ -53,6 +75,7 @@ SyncCode enables multiple developers to collaborate in real time by joining shar
 - Middleware
 - Socket Middleware
 - Scheduler for inactive room cleanup
+- Real-time Socket.IO event handling
 
 ---
 
