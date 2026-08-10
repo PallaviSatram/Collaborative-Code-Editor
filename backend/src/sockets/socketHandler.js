@@ -23,6 +23,10 @@ function socketHandler(io) {
 
         console.log("Socket connected", socket.id);
 
+        socket.onAny((event, ...args) => {
+            console.log("📨 SOCKET EVENT:", event, args);
+        });
+
         socket.on(ACTIONS.JOIN, async ({ roomId, roomName }) => {
 
             const username = socket.user.username;
@@ -57,7 +61,7 @@ function socketHandler(io) {
                     socketId: socket.id,
                 });
             });
-            
+
             // Send existing room state to the newly joined user
             const roomState = await roomService.getRoomState(roomId);
 
@@ -77,6 +81,45 @@ function socketHandler(io) {
             });
 
         });
+
+        socket.on(
+            ACTIONS.CURSOR_MOVE,
+            ({ roomId, line, column }) => {
+
+                const user = connectedUsers[socket.id];
+
+                console.log("📍 CURSOR_MOVE received:", {
+                    socketId: socket.id,
+                    username: user?.username,
+                    roomId,
+                    line,
+                    column,
+                });
+
+                if (!user) {
+                    console.log(
+                        "❌ User not found:",
+                        socket.id
+                    );
+                    return;
+                }
+
+                socket.to(roomId).emit(
+                    ACTIONS.CURSOR_MOVE,
+                    {
+                        socketId: socket.id,
+                        username: user.username,
+                        line,
+                        column,
+                    }
+                );
+
+                console.log(
+                    "📡 CURSOR_MOVE forwarded to room:",
+                    roomId
+                );
+            }
+        );
 
         socket.on(ACTIONS.LANGUAGE_CHANGE, async ({ roomId, language }) => {
             await roomService.updateLanguage(roomId, language);

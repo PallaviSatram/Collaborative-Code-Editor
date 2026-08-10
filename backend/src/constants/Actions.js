@@ -9,7 +9,7 @@ const ACTIONS = {
 
   LANGUAGE_CHANGE: "language-change",
   SYNC_LANGUAGE: "sync-language",
-
+  CURSOR_MOVE: 'cursor-move',
   LEAVE: 'leave',
 };
 
