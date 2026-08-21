@@ -86,6 +86,39 @@ class ParticipantModel {
 
   }
 
+  async getRecentRooms(
+    username,
+    limit = 5,
+    offset = 0
+  ) {
+
+    const query = `
+        SELECT
+            r.room_id,
+            r.room_name,
+            r.current_language,
+            rp.joined_at
+        FROM room_participants rp
+        INNER JOIN rooms r
+            ON rp.room_id = r.room_id
+        WHERE rp.username = $1
+        ORDER BY rp.joined_at DESC
+        LIMIT $2
+        OFFSET $3;
+    `;
+
+    const result = await pool.query(
+      query,
+      [
+        username,
+        limit,
+        offset,
+      ]
+    );
+
+    return result.rows;
+  }
+
 }
 
 module.exports = new ParticipantModel();

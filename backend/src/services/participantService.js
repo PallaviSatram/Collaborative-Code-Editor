@@ -20,6 +20,20 @@ class ParticipantService {
 
     }
 
+    async getRecentRooms(
+        username,
+        limit = 5,
+        offset = 0
+    ) {
+
+        return await participantModel.getRecentRooms(
+            username,
+            limit,
+            offset
+        );
+
+    }
+
 }
 
 module.exports = new ParticipantService();
