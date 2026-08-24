@@ -9,7 +9,18 @@ const roomRoutes = require("./routes/roomRoutes");
 const app = express();
 
 // Middleware
-app.use(cors());
+const allowedOrigins = [
+    "http://localhost:3000",
+    process.env.FRONTEND_URL,
+];
+
+app.use(
+    cors({
+        origin: allowedOrigins,
+        methods: ["GET", "POST", "PATCH"],
+        credentials: true,
+    })
+);
 app.use(express.json());
 
 // Routes

@@ -12,10 +12,16 @@ const socketHandler = require("./src/sockets/socketHandler");
 
 const server = http.createServer(app);
 
+const allowedOrigins = [
+    "http://localhost:3000",
+    process.env.FRONTEND_URL,
+];
+
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:3000",
-        methods: ["GET", "POST"],
+        origin: allowedOrigins,
+        methods: ["GET", "POST", "PATCH"],
+        credentials: true,
     },
 });
 io.use(socketAuthMiddleware);
