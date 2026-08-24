@@ -28,4 +28,20 @@ api.interceptors.request.use(
 
 );
 
+export const updateRoomName = async (
+    roomId,
+    roomName
+) => {
+
+    const response = await api.patch(
+        `/api/rooms/${roomId}`,
+        {
+            roomName,
+        }
+    );
+
+    return response.data;
+
+};
+
 export default api;

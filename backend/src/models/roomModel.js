@@ -87,6 +87,28 @@ class RoomModel {
         return result.rows;
 
     }
+    async updateRoomName(roomId, roomName) {
+
+        const query = `
+        UPDATE rooms
+        SET
+            room_name = $1,
+            updated_at = NOW()
+        WHERE room_id = $2
+        RETURNING *;
+    `;
+
+        const result = await pool.query(
+            query,
+            [
+                roomName,
+                roomId,
+            ]
+        );
+
+        return result.rows[0] || null;
+
+    }
 
 }
 

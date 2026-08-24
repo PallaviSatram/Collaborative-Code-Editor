@@ -6,6 +6,7 @@ import "./Home.css";
 import { useAuth } from "../context/AuthContext";
 import api from "../api/api";
 import STORAGE_KEYS from "../constants/storageKeys";
+import { updateRoomName } from "../api/api";
 
 const Home = () => {
 
@@ -19,6 +20,11 @@ const Home = () => {
   const [recentRoomsPage, setRecentRoomsPage] = useState(1);
   const [hasMoreRooms, setHasMoreRooms] = useState(false);
   const [isLoadingRooms, setIsLoadingRooms] = useState(false);
+  const [editingRoomId, setEditingRoomId] =
+    useState(null);
+
+  const [editedRoomName, setEditedRoomName] =
+    useState("");
 
   async function fetchRecentRooms(page = 1) {
 
@@ -155,6 +161,61 @@ const Home = () => {
     navigate("/login");
 
   }
+
+  const startEditingRoom = (room) => {
+
+    setEditingRoomId(room.room_id);
+
+    setEditedRoomName(room.room_name);
+
+  };
+
+  const cancelEditingRoom = () => {
+
+    setEditingRoomId(null);
+
+    setEditedRoomName("");
+
+  };
+
+  const saveRoomName = async (roomId) => {
+
+    const trimmedName = editedRoomName.trim();
+
+    if (!trimmedName) {
+      return;
+    }
+
+    try {
+
+      const response = await updateRoomName(
+        roomId,
+        trimmedName
+      );
+
+      setRecentRooms((previousRooms) =>
+        previousRooms.map((room) =>
+          room.room_id === roomId
+            ? {
+              ...room,
+              room_name: response.room.room_name,
+            }
+            : room
+        )
+      );
+
+      cancelEditingRoom();
+
+    } catch (error) {
+
+      console.error(
+        "Update room name error:",
+        error
+      );
+
+    }
+
+  };
 
   return (
     <div className="home-page">
@@ -349,9 +410,65 @@ const Home = () => {
 
                     <div className="recent-room-info">
 
-                      <h3>
-                        {room.room_name}
-                      </h3>
+                      {editingRoomId === room.room_id ? (
+
+                        <div className="edit-room-name">
+
+                          <input
+                            type="text"
+                            value={editedRoomName}
+                            onChange={(e) =>
+                              setEditedRoomName(e.target.value)
+                            }
+                            onKeyDown={(e) => {
+                              if (e.key === "Enter") {
+                                saveRoomName(room.room_id);
+                              }
+
+                              if (e.key === "Escape") {
+                                cancelEditingRoom();
+                              }
+                            }}
+                            autoFocus
+                          />
+
+                          <button
+                            className="save-room-name-btn"
+                            onClick={() =>
+                              saveRoomName(room.room_id)
+                            }
+                          >
+                            Save
+                          </button>
+
+                          <button
+                            className="cancel-edit-btn"
+                            onClick={cancelEditingRoom}
+                          >
+                            Cancel
+                          </button>
+
+                        </div>
+
+                      ) : (
+
+                        <div className="room-name-row">
+
+                          <h3>{room.room_name}</h3>
+
+                          <button
+                            className="edit-room-btn"
+                            onClick={() =>
+                              startEditingRoom(room)
+                            }
+                            title="Edit room name"
+                          >
+                            ✏️
+                          </button>
+
+                        </div>
+
+                      )}
 
                       <div className="recent-room-meta">
 

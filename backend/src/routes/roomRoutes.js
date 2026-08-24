@@ -8,11 +8,21 @@ const authMiddleware =
 const participantController =
     require("../controllers/participantController");
 
+const roomController = require(
+    "../controllers/roomController"
+);
+
 
 router.get(
     "/recent",
     authMiddleware,
     participantController.getRecentRooms
+);
+
+router.patch(
+    "/:roomId",
+    authMiddleware,
+    roomController.updateRoomName
 );
 
 

@@ -677,3 +677,84 @@ footer a:hover {
     }
 
 }
+
+/* Edit Room Name */
+
+.room-name-row {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+.room-name-row h3 {
+    margin: 0;
+}
+
+.edit-room-btn {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+    font-size: 15px;
+    padding: 4px;
+    opacity: 0.65;
+    transition: 0.2s;
+}
+
+.edit-room-btn:hover {
+    opacity: 1;
+    transform: scale(1.1);
+}
+
+.edit-room-name {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    width: 100%;
+}
+
+.edit-room-name input {
+    flex: 1;
+    min-width: 0;
+    background: #334155;
+    color: white;
+    border: 1px solid #475569;
+    outline: none;
+    padding: 8px 10px;
+    border-radius: 8px;
+    font-size: 15px;
+}
+
+.edit-room-name input:focus {
+    border-color: #22C55E;
+}
+
+.save-room-name-btn,
+.cancel-edit-btn {
+    border: none;
+    border-radius: 7px;
+    padding: 8px 10px;
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: 0.2s;
+}
+
+.save-room-name-btn {
+    background: #22C55E;
+    color: #0F172A;
+}
+
+.save-room-name-btn:hover {
+    background: #16A34A;
+}
+
+.cancel-edit-btn {
+    background: transparent;
+    color: #94A3B8;
+    border: 1px solid #475569;
+}
+
+.cancel-edit-btn:hover {
+    color: white;
+    border-color: #94A3B8;
+}

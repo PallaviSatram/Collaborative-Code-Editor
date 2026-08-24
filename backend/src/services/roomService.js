@@ -20,6 +20,17 @@ class RoomService {
     return await roomModel.findByRoomId(roomId);
   }
 
+  async updateRoomName(roomId, roomName) {
+
+    const room = await roomModel.updateRoomName(
+      roomId,
+      roomName
+    );
+
+    return room;
+
+  }
+
   async getRoomState(roomId) {
 
     const room = await roomModel.findByRoomId(roomId);
