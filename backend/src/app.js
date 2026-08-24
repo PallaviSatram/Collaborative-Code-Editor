@@ -24,6 +24,11 @@ app.use(
 app.use(express.json());
 
 // Routes
+app.get("/", (req, res) => {
+    res.json({
+        message: "SyncCode API is running 🚀"
+    });
+});
 app.use("/api/auth", authRoutes);
 app.use("/api/versions", codeVersionRoutes);
 app.use("/api/rooms", roomRoutes);
