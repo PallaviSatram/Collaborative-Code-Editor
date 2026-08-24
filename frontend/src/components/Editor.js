@@ -368,7 +368,10 @@ const Editor = ({ socket, roomId, onCodeChange, onLanguageChange, onRoomNameChan
 
     };
 
-  }, [socket, onLanguageChange]);
+  }, [socket,
+  onCodeChange,
+  onLanguageChange,
+  onRoomNameChange,]);
 
   return (
     <>

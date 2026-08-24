@@ -1,4 +1,3 @@
-import api from "../api/api";
 import { useAuth } from "../context/AuthContext";
 import React, { useEffect, useRef, useState } from 'react'
 import Client from '../components/Client';
@@ -34,6 +33,8 @@ const EditorPage = () => {
   const [roomName, setRoomName] = useState(
     location.state?.roomName || "Untitled Room"
   );
+  const initialRoomName =
+  location.state?.roomName || "Untitled Room";
 
   useEffect(() => {
     if (!user) {
@@ -59,9 +60,7 @@ const EditorPage = () => {
         ACTIONS.JOIN,
         {
           roomId,
-          roomName:
-            location.state?.roomName ||
-            "Untitled Room",
+          roomName: initialRoomName,
         }
       );
 
@@ -113,7 +112,7 @@ const EditorPage = () => {
     };
 
 
-  }, [roomId, reactNavigator, user]);
+  }, [roomId, reactNavigator, user, initialRoomName]);
 
   async function copyRoomId() {
     try {
