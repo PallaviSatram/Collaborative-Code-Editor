@@ -145,7 +145,7 @@ const EditorPage = () => {
       );
 
       const response = await fetch(
-        "http://localhost:5000/api/versions",
+        `${process.env.REACT_APP_API_URL}/api/versions`,
         {
           method: "POST",
           headers: {
@@ -198,7 +198,7 @@ const EditorPage = () => {
       const token = localStorage.getItem(STORAGE_KEYS.AUTH_TOKEN);
 
       const response = await fetch(
-        `http://localhost:5000/api/versions/room/${roomId}`,
+        `${process.env.REACT_APP_API_URL}/api/versions/room/${roomId}`,
         {
           method: "GET",
           headers: {
@@ -243,7 +243,7 @@ const EditorPage = () => {
       );
 
       const response = await fetch(
-        `http://localhost:5000/api/versions/${versionId}`,
+        `${process.env.REACT_APP_API_URL}/api/versions/${versionId}`,
         {
           method: "GET",
           headers: {
