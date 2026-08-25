@@ -9,13 +9,21 @@ const roomRoutes = require("./routes/roomRoutes");
 const app = express();
 
 // Middleware
-const corsOptions = {
-    origin: process.env.FRONTEND_URL,
-    methods: ["GET", "POST", "PUT", "DELETE"],
-    credentials: true,
-};
+const allowedOrigins = [
+  'https://collaborative-code-editor-eight-blush.vercel.app',
+  'http://localhost:3000' // keep for local dev
+];
 
-app.use(cors(corsOptions));
+app.use(cors({
+  origin: function (origin, callback) {
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
+  credentials: true // important if you're using cookies/JWT in headers
+}));
 
 app.use(express.json());
 

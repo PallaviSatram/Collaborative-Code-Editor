@@ -12,11 +12,21 @@ const socketHandler = require("./src/sockets/socketHandler");
 
 const server = http.createServer(app);
 
+const allowedOrigins = [
+    'https://collaborative-code-editor-eight-blush.vercel.app',
+    'http://localhost:3000' // keep for local dev
+];
+
 const io = new Server(server, {
     cors: {
-        origin: process.env.FRONTEND_URL,
-        methods: ["GET", "POST", "PATCH"],
-        credentials: true,
+        origin: function (origin, callback) {
+            if (!origin || allowedOrigins.includes(origin)) {
+                callback(null, true);
+            } else {
+                callback(new Error('Not allowed by CORS'));
+            }
+        },
+        credentials: true // important if you're using cookies/JWT in headers
     },
 });
 io.use(socketAuthMiddleware);
